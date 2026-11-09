@@ -1,6 +1,6 @@
-# yt-transcript
+# vtt-transcript
 
-Turns videos on YouTube and X, and meetings recorded in Microsoft Teams, into Markdown transcripts that read as prose, as dialog or as a meeting, for use as agent input or reference material. It produces transcripts, never summaries.
+Turns the subtitles of YouTube and X videos, and Microsoft Teams meeting exports, into Markdown transcripts that read as prose, as dialog or as a meeting, for use as agent input or reference material. It produces transcripts, never summaries.
 
 ## Language
 
