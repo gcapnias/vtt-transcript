@@ -1,8 +1,8 @@
 # The release (ADR-0012). Every push to main reads the version from
 # package.json; if v<version> is already tagged it publishes nothing and
 # succeeds. Otherwise it writes notes from the commits since the previous tag,
-# builds and smoke-tests the Windows executable, tags the pushed commit, and
-# publishes the release. Nothing else in this repository publishes anything.
+# builds, smoke-tests and zips the Windows executable, tags the pushed commit,
+# and publishes the release with the zip attached. Nothing else in this repository publishes anything.
 name: Release
 
 on:
@@ -116,6 +116,20 @@ jobs:
           if ($file -ne "$($env:VERSION).0") { throw "file version is '$file', expected '$($env:VERSION).0'" }
           "vtt-transcript.exe --version: $printed (file version $file)"
 
+      # The release carries a zip, not a bare .exe: browsers and mail filters
+      # treat a downloaded executable with suspicion, and the versioned name
+      # keeps two releases' downloads apart. The executable sits at the zip's
+      # root. Also before the tag.
+      - name: Package the executable
+        shell: pwsh
+        run: |
+          $zip = "dist\vtt-transcript-$($env:VERSION)-windows-x64.zip"
+          Compress-Archive -Path dist\vtt-transcript.exe -DestinationPath $zip -Force
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $entries = [IO.Compression.ZipFile]::OpenRead((Resolve-Path $zip)).Entries.FullName
+          if (($entries -join ',') -ne 'vtt-transcript.exe') { throw "zip holds '$($entries -join ', ')', expected only vtt-transcript.exe" }
+          "$zip holds $entries"
+
       # Annotated, like v0.2.0 to v0.3.0. Left to the release action, the tag
       # would be lightweight.
       - name: Tag the pushed commit
@@ -132,7 +146,7 @@ jobs:
           tag_name: v${{ needs.notes.outputs.version }}
           name: v${{ needs.notes.outputs.version }}
           body: ${{ needs.notes.outputs.body }}
-          files: dist/vtt-transcript.exe
+          files: dist/vtt-transcript-${{ needs.notes.outputs.version }}-windows-x64.zip
           fail_on_unmatched_files: true
           prerelease: false
           draft: false
