@@ -1,5 +1,6 @@
 # Research index
 
+- [commit-based-release-notes.md](commit-based-release-notes.md): Release notes from conventional commits since the previous tag in GitHub Actions (git-cliff vs alternatives; follow-up to gcapnias/yt-transcript#22)
 - [bun-compile-ci-semver-release-pipelines.md](bun-compile-ci-semver-release-pipelines.md): How real projects build, version, and release `bun build --compile` binaries in GitHub Actions (tracking issue gcapnias/yt-transcript#22)
 - [iso-843-elot-743-greek-romanization.md](iso-843-elot-743-greek-romanization.md): ISO 843:1997 / ELOT 743 Greek romanization, for ASCII filename slugs
 - [subtitle-speaker-notation.md](subtitle-speaker-notation.md): How subtitle tracks mark speaker changes and speaker identity (gcapnias/yt-transcript#11)
