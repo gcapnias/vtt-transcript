@@ -1,10 +1,12 @@
-# yt-transcript
+# vtt-transcript
 
-Turns videos on YouTube and X into Markdown transcripts that read as prose or as
-dialog, for use as agent input or reference material. It produces transcripts, never
-summaries.
+Turns the subtitles of YouTube and X videos, and Microsoft Teams meeting exports,
+into Markdown transcripts that read as prose, as dialog or as a meeting, for use as
+agent input or reference material. It produces transcripts, never summaries.
 
-Each fetch downloads a subtitle track, cleans it into paragraphs or, for a
+A meeting is read from its local `.vtt` file, with no download, and written as turns
+named by speaker into `transcripts/meetings/` (see [Meetings](#meetings)). A video
+fetch downloads a subtitle track, cleans it into paragraphs or, for a
 multi-speaker track, turns, and writes one Markdown file with frontmatter describing
 the video, filed in a folder per channel:
 `transcripts/<channel folder>/<slug>.md`. The folder is the channel's handle in
@@ -19,7 +21,7 @@ from what is there; it warns about any transcript left outside a channel folder.
 
 ## Prerequisites
 
-- **Node `>=22.18.0 <23 || >=24.2.0`** — versions where `import.meta.main` exists; see [#2](https://github.com/gcapnias/yt-transcript/issues/2). Needed only to run from source, not for the [standalone executable](#standalone-executable)
+- **Node `>=22.18.0 <23 || >=24.2.0`** — versions where `import.meta.main` exists; see [#2](https://github.com/gcapnias/vtt-transcript/issues/2). Needed only to run from source, not for the [standalone executable](#standalone-executable)
 - **`yt-dlp`** on `PATH` — every fetch is a `yt-dlp` spawn; nothing is bundled
 
 ## Usage
@@ -93,8 +95,8 @@ fragment is ignored.
 Run straight from this repository, no `git clone` first:
 
 ```bash
-npx --allow-git=root github:gcapnias/yt-transcript o3CX_Y59_74
-npx --allow-git=root github:gcapnias/yt-transcript catalog
+npx --allow-git=root github:gcapnias/vtt-transcript o3CX_Y59_74
+npx --allow-git=root github:gcapnias/vtt-transcript catalog
 ```
 
 `--allow-git=root` is required. Since npm 12 the default for `allow-git` is
@@ -121,13 +123,13 @@ without a clone:
 npm run build
 ```
 
-The binary lands in `dist/` as `yt-transcript.exe` on Windows and `yt-transcript`
+The binary lands in `dist/` as `vtt-transcript.exe` on Windows and `vtt-transcript`
 elsewhere, built for the machine that runs the build. It runs exactly like `npx .`:
 same arguments, flags, output, exit codes and files, relative to the directory it is
 run from.
 
 ```bash
-dist/yt-transcript o3CX_Y59_74
+dist/vtt-transcript o3CX_Y59_74
 ```
 
 Like `npx .`, it needs `yt-dlp` on `PATH` to fetch videos, but it does not need Node,
@@ -140,7 +142,7 @@ is needed only to build it (tested with Bun 1.4.3), and the binary is large, abo
 A path ending in `.vtt` is a meeting, such as a Microsoft Teams transcript export:
 
 ```bash
-yt-transcript path/to/meeting.vtt
+vtt-transcript path/to/meeting.vtt
 ```
 
 It is transcribed from the file, with no download, so `yt-dlp` is not needed. The

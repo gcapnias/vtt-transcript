@@ -1,6 +1,6 @@
-# yt-transcript
+# vtt-transcript
 
-Turns videos on YouTube and X, and meetings recorded in Microsoft Teams, into Markdown transcripts that read as prose, as dialog or as a meeting, for use as agent input or reference material. It produces transcripts, never summaries.
+Turns the subtitles of YouTube and X videos, and Microsoft Teams meeting exports, into Markdown transcripts that read as prose, as dialog or as a meeting, for use as agent input or reference material. It produces transcripts, never summaries.
 
 ## Language
 
@@ -99,3 +99,17 @@ _Avoid_: Run, job, queue, bulk fetch
 **Expand**:
 Turning a playlist or channel URL into the list of videos it names, so each can be fetched. Only playlist and channel URLs expand; a video URL is already a single video.
 _Avoid_: Resolve, enumerate, crawl, unroll
+
+## Distribution
+
+**Standalone executable**:
+The tool compiled into a single Windows `.exe` that runs without Node, for dropping on a `PATH` or handing to someone. It still needs `yt-dlp` on `PATH`.
+_Avoid_: Binary, bundle, build
+
+**Version**:
+The tool's semver number, written by hand in one place and bumped before a release. An executable built outside a release carries it as a development version, the same number marked `-dev` with the commit it came from, so it never passes for a released one.
+_Avoid_: Build number, revision
+
+**Release**:
+A published version: its tag, its standalone executable, and notes listing the changes since the previous release, drawn from the commit messages. Only merging into `main` makes a release, and only once per version; nothing on `develop` or a task branch is ever released.
+_Avoid_: Pre-release, nightly, publish, drop

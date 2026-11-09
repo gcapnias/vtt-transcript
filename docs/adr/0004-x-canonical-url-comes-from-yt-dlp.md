@@ -14,7 +14,7 @@ for N ≥ 2. The first video has no suffix, so the bare post URL and its first v
 transcript.
 
 The rank comes from `yt-dlp` too, but its report can be trusted only in some cases
-(gcapnias/yt-transcript#7):
+(gcapnias/vtt-transcript#7):
 
 - **Whole-post fetch** (no selector): the rank is `playlist_index`, and the ` #N` title suffix
   agrees with it. One invocation.

@@ -15,7 +15,7 @@ import path from 'node:path';
  * @returns {Promise<T>}
  */
 export async function withTempDir(use) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'yt-transcript-'));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'vtt-transcript-'));
   try {
     return await use(dir);
   } finally {

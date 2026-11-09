@@ -383,7 +383,7 @@ test('expansion failure names the playlist and what yt-dlp said', () => {
 
 // X posts: the fetch selects entry #1 rather than relying on `--no-playlist`
 // alone, which X's extractor ignores. A second, list-only invocation exists for
-// the one case the fetch cannot rank by itself (gcapnias/yt-transcript#7).
+// the one case the fetch cannot rank by itself (gcapnias/vtt-transcript#7).
 
 const POST_URL = 'https://x.com/poteto/status/2102050467505430555';
 

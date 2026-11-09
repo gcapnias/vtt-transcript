@@ -40,7 +40,7 @@ export const TRANSCRIPTS_DIR = 'transcripts';
  * @returns {Promise<Array<{ path: string, text: string }>>}
  */
 export async function readTranscriptFiles(dir) {
-  // A missing directory is zero transcripts, not a crash: `yt-transcript
+  // A missing directory is zero transcripts, not a crash: `vtt-transcript
   // catalog` in a fresh tree must still produce the empty catalog.
   await fs.mkdir(dir, { recursive: true });
 

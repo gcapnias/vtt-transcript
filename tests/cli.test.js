@@ -65,7 +65,7 @@ test('no target prints the usage and exits non-zero, spawning nothing', async ()
   const { err, io } = capture();
 
   assert.equal(await main([], io), 1);
-  assert.match(err.join('\n'), /Usage: yt-transcript/);
+  assert.match(err.join('\n'), /Usage: vtt-transcript/);
 });
 
 test('an unfetchable target is rejected before yt-dlp is ever reached', async () => {
@@ -259,7 +259,7 @@ test('each rung of the retry ladder is reported, naming the video', async () => 
 // beside the rendering rules. The rebuild itself is stubbed throughout: what
 // is under test is that it fires, once, on exactly the right paths.
 
-test('`yt-transcript catalog` rebuilds without fetching anything', async () => {
+test('`vtt-transcript catalog` rebuilds without fetching anything', async () => {
   const { out, io } = capture();
   let rebuilds = 0;
 
@@ -282,7 +282,7 @@ test('catalog takes no target and no flags', async () => {
   const { err, io } = capture();
 
   assert.equal(await main(['catalog', 'o3CX_Y59_74'], io, { rebuildCatalog: async () => {} }), 1);
-  assert.match(err.join('\n'), /Usage: yt-transcript/);
+  assert.match(err.join('\n'), /Usage: vtt-transcript/);
 });
 
 test('a successful single-video fetch rebuilds the catalog exactly once', async () => {
@@ -335,7 +335,7 @@ test('a written transcript is still reported when the rebuild itself fails', asy
 
   assert.equal(code, 1);
   assert.match(out.join('\n'), /transcripts\/a-talk\.md/);
-  assert.match(err.join('\n'), /yt-transcript catalog/);
+  assert.match(err.join('\n'), /vtt-transcript catalog/);
 });
 
 // Batches. The expansion spawn, the real one-second delay and the disk scan
@@ -534,7 +534,7 @@ test('a batch reports what it fetched even when the single rebuild fails', async
 
   assert.equal(code, 1);
   assert.match(out.join('\n'), /3 fetched/);
-  assert.match(err.join('\n'), /yt-transcript catalog/);
+  assert.match(err.join('\n'), /vtt-transcript catalog/);
 });
 
 test('a batch preflights yt-dlp before it expands anything', async () => {

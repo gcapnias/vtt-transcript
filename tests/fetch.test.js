@@ -303,7 +303,7 @@ test('two different posts sharing a title are told apart by post id', async () =
 
 // Which of a post's videos was fetched. On a selector fetch of a multi-video
 // post, yt-dlp numbers every video `#1`, so the post is listed and the fetched
-// media id looked up in it (gcapnias/yt-transcript#7).
+// media id looked up in it (gcapnias/vtt-transcript#7).
 
 const CTV = 'ctv-1600649710662213632';
 const CTV_POST = 'https://x.com/i/status/1600649710662213632';
