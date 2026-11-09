@@ -7,7 +7,10 @@ are all named `vtt-transcript`, with nothing kept under the old name. The name r
 subtitle files every transcript is made from.** The one description used everywhere is: "Turns the
 subtitles of YouTube and X videos, and Microsoft Teams meeting exports, into Markdown transcripts
 that read as prose, as dialog or as a meeting, for use as agent input or reference material. It
-produces transcripts, never summaries."
+produces transcripts, never summaries." The GitHub repository's description is the only place
+that uses a shortened form, because it is shown as a single line under the repo name: "Turns the
+subtitles of YouTube and X videos, and Microsoft Teams meeting exports, into Markdown transcripts,
+never summaries."
 
 - **The name says `vtt` even though `.srt` is read too.** A meeting must be a `.vtt` file, and
   `yt-dlp` hands over `.vtt` for almost every fetch. However, no `--sub-format` is passed, so an
