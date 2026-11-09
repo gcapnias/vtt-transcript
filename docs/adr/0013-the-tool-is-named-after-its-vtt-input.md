@@ -17,7 +17,10 @@ produces transcripts, never summaries."
 - **"vtt" is not a glossary term.** The domain words are still **Subtitle track** and **Cue**.
   The file format stays out of `GLOSSARY.md`, as `.srt` does.
 - **No `yt-transcript` alias.** The tool has one user, its version is below 1.0, and no release
-  had been published, so a second `bin` entry would only keep the old branding alive.
+  had been published, so a second `bin` entry would only keep the old branding alive. This
+  depends on the rename landing before the first release (#22). A release published under
+  `yt-transcript` would put an executable under that name in someone's hands, and that would
+  reopen the question of an alias.
 
 ## Considered options
 
