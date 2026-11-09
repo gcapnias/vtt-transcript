@@ -8,7 +8,7 @@ Work on `develop` in the primary checkout, or on task branches in linked worktre
 
 ### Issue tracker
 
-Issues live as GitHub issues in `gcapnias/yt-transcript`, managed with the `gh` CLI. See `docs/agents/issue-tracker.md`.
+Issues live as GitHub issues in `gcapnias/vtt-transcript`, managed with the `gh` CLI. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

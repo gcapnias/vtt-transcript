@@ -14,9 +14,9 @@ export const YT_DLP = 'yt-dlp';
 export class YtDlpMissingError extends Error {
   constructor(binary) {
     super(
-      `${binary} was not found on PATH as an executable, and yt-transcript needs ` +
+      `${binary} was not found on PATH as an executable, and vtt-transcript needs ` +
         'it to download subtitle tracks.\n' +
-        '\nInstall it, then run yt-transcript again:\n' +
+        '\nInstall it, then run vtt-transcript again:\n' +
         '  winget install yt-dlp.yt-dlp     (Windows)\n' +
         '  brew install yt-dlp              (macOS)\n' +
         '  pipx install yt-dlp              (any platform with Python)\n' +

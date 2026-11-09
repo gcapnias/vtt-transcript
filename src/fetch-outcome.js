@@ -26,7 +26,7 @@ export const RATE_LIMITED = 'rate-limited';
 export const NO_VIDEO = 'no-video';
 /** `/video/N` names a video the post does not have. */
 export const NO_SUCH_VIDEO = 'no-such-video';
-/** The post is protected or age-restricted; yt-transcript does not log in. */
+/** The post is protected or age-restricted; vtt-transcript does not log in. */
 export const LOGIN_REQUIRED = 'login-required';
 /** The fetch led away from X, e.g. a link-only post followed to another site. */
 export const NOT_AN_X_POST = 'not-an-x-post';
@@ -166,7 +166,7 @@ export function describeFailure({ failure, url, lang }) {
   if (failure === NO_SUBTITLES) {
     return (
       `No subtitles in "${lang}" are available for ${url}.\n` +
-      'Nothing was written. yt-transcript only ever retrieves the language you asked for.'
+      'Nothing was written. vtt-transcript only ever retrieves the language you asked for.'
     );
   }
 
@@ -187,7 +187,7 @@ export function describeFailure({ failure, url, lang }) {
   if (failure === LOGIN_REQUIRED) {
     return (
       `The post ${url} requires logging in to view (it is protected or age-restricted), ` +
-      'which yt-transcript does not do.\nNothing was written.'
+      'which vtt-transcript does not do.\nNothing was written.'
     );
   }
 

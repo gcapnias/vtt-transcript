@@ -8,9 +8,10 @@ import { parseTarget, TargetParseError } from './target.js';
 import { MeetingFileNotFoundError, transcribeMeeting, UnusableMeetingNameError } from './transcribe.js';
 import { preflight, expandPlaylist, ExpansionError, FetchError, YtDlpMissingError } from './ytdlp.js';
 
-const USAGE = `Usage: yt-transcript <url|id|file.vtt> [--lang <code>]
-                     [--layout auto|prose|dialog|meeting] [--playlist] [--force]
-       yt-transcript catalog
+const USAGE = `Usage: vtt-transcript <url|id|file.vtt> [--lang <code>]
+                      [--layout auto|prose|dialog|meeting] [--playlist]
+                      [--force]
+       vtt-transcript catalog
 
   <url|id>      a YouTube video URL, a bare video id, a youtu.be or /shorts
                 link, a playlist URL, a channel URL, or a bare @handle; or
@@ -268,7 +269,7 @@ function report(out, transcript, file, passedOver = []) {
  */
 function reportRebuildFailure(err, error, written) {
   err(`${written}, but the catalog could not be rebuilt: ${error.message}`);
-  err('Run `yt-transcript catalog` to rebuild it.');
+  err('Run `vtt-transcript catalog` to rebuild it.');
 }
 
 /**

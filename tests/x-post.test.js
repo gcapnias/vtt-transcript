@@ -8,7 +8,7 @@ import { readXListing, readXPrintLine } from './fixtures.js';
 /**
  * Which of a post's videos was fetched. yt-dlp's ` #N` title suffix is right
  * on a whole-post fetch and wrong on a selector fetch of a multi-video post,
- * where it numbers every video `#1` (gcapnias/yt-transcript#7).
+ * where it numbers every video `#1` (gcapnias/vtt-transcript#7).
  */
 
 const recorded = (name) => parseMetadata(readXPrintLine(name));

@@ -286,7 +286,7 @@ test('an invalid --layout exits with a usage error and fetches nothing', async (
   });
   assert.equal(code, 1);
   assert.match(err.join('\n'), /--layout/);
-  assert.match(err.join('\n'), /Usage: yt-transcript/);
+  assert.match(err.join('\n'), /Usage: vtt-transcript/);
 });
 
 test('--layout is in the help text', async () => {

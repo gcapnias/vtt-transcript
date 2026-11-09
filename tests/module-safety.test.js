@@ -9,7 +9,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 /**
  * The standalone cleaner this tool replaces ran its CLI block at module scope,
  * so merely importing it wrote a file. Every module must stay import-safe:
- * only bin/yt-transcript.js may run anything.
+ * only bin/vtt-transcript.js may run anything.
  */
 /** Asserts that importing `modules` left the repository exactly as it was. */
 async function importLeavingNoTrace(modules) {
@@ -44,11 +44,11 @@ test('importing the entry point does not run the command', async (t) => {
     return;
   }
 
-  await importLeavingNoTrace(['bin/yt-transcript.js']);
+  await importLeavingNoTrace(['bin/vtt-transcript.js']);
   assert.equal(process.exitCode ?? 0, 0, 'importing the entry point ran the command');
 });
 
-test('bin/yt-transcript.js is the only module that calls main', () => {
+test('bin/vtt-transcript.js is the only module that calls main', () => {
   const modules = fs
     .readdirSync(path.join(root, 'src'))
     .filter((name) => name.endsWith('.js'))

@@ -1,7 +1,7 @@
 # Selecting a post's later video through a `t.co` link
 
 A `t.co` link to an X post always fetches the post's first video, even when the link was shared
-from a later one. yt-transcript does not resolve `t.co` redirects itself to recover which video was
+from a later one. vtt-transcript does not resolve `t.co` redirects itself to recover which video was
 meant.
 
 ## Why this is out of scope
