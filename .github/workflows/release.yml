@@ -1,0 +1,138 @@
+# The release (ADR-0012). Every push to main reads the version from
+# package.json; if v<version> is already tagged it publishes nothing and
+# succeeds. Otherwise it writes notes from the commits since the previous tag,
+# builds and smoke-tests the Windows executable, tags the pushed commit, and
+# publishes the release. Nothing else in this repository publishes anything.
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Two pushes to main in quick succession must not race to tag the same version.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  notes:
+    # git-cliff runs on Ubuntu: its action has no Windows CI of its own, and
+    # every release workflow surveyed runs it there.
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      released: ${{ steps.version.outputs.released }}
+      body: ${{ steps.body.outputs.body }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # git-cliff needs the whole history and its tags.
+          fetch-depth: 0
+
+      - name: Read the version, and whether it is already released
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          status=0
+          git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null || status=$?
+          if [ "$status" -eq 0 ]; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::v$version is already released; nothing to publish."
+            # A tag with no release is a run that tagged and then failed to
+            # publish. Re-running cannot finish it, since the tag now says
+            # "released"; say so instead of succeeding in silence.
+            if ! gh release view "v$version" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              echo "::warning::Tag v$version exists but has no GitHub release. Delete the tag (git push origin :refs/tags/v$version) and re-run this workflow to publish it."
+            fi
+          elif [ "$status" -eq 2 ]; then
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Could not ask the remote for tag v$version (git ls-remote exited $status)."
+            exit 1
+          fi
+
+      - name: Generate notes from the commits since the previous release
+        id: cliff
+        if: steps.version.outputs.released == 'false'
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --unreleased --tag v${{ steps.version.outputs.version }} --strip header
+
+      # A release whose commits are all docs, chore or test renders nothing;
+      # say so rather than publish an empty body.
+      - name: Settle the release body
+        id: body
+        if: steps.version.outputs.released == 'false'
+        env:
+          NOTES: ${{ steps.cliff.outputs.content }}
+        run: |
+          if [ -z "$(printf '%s' "$NOTES" | tr -d '[:space:]')" ]; then
+            NOTES="No feature, fix or refactoring commits since the previous release."
+          fi
+          delimiter="EOF_$(openssl rand -hex 8)"
+          {
+            echo "body<<$delimiter"
+            printf '%s\n' "$NOTES"
+            echo "$delimiter"
+          } >> "$GITHUB_OUTPUT"
+
+  release:
+    needs: notes
+    if: needs.notes.outputs.released == 'false'
+    # Native Windows: Bun sets the executable's file version only when it is
+    # not cross-compiling.
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.notes.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .bun-version
+
+      - name: Build the executable
+        env:
+          VTT_TRANSCRIPT_RELEASE: 'true'
+        run: npm run build
+
+      # Before the tag, so a broken build never leaves a tag behind.
+      - name: Smoke-test --version
+        shell: pwsh
+        run: |
+          $printed = & dist\vtt-transcript.exe --version
+          if ($LASTEXITCODE -ne 0) { throw "--version exited $LASTEXITCODE" }
+          if ($printed -ne $env:VERSION) { throw "--version printed '$printed', expected '$($env:VERSION)'" }
+          $file = (Get-Item dist\vtt-transcript.exe).VersionInfo.FileVersion
+          if ($file -ne "$($env:VERSION).0") { throw "file version is '$file', expected '$($env:VERSION).0'" }
+          "vtt-transcript.exe --version: $printed (file version $file)"
+
+      # Annotated, like v0.2.0 to v0.3.0. Left to the release action, the tag
+      # would be lightweight.
+      - name: Tag the pushed commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "vtt-transcript v$VERSION" "$GITHUB_SHA"
+          git push origin "refs/tags/v$VERSION"
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ needs.notes.outputs.version }}
+          name: v${{ needs.notes.outputs.version }}
+          body: ${{ needs.notes.outputs.body }}
+          files: dist/vtt-transcript.exe
+          fail_on_unmatched_files: true
+          prerelease: false
+          draft: false
