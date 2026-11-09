@@ -8,7 +8,7 @@
     "vtt-transcript": "./bin/vtt-transcript.js"
   },
   "scripts": {
-    "build": "bun build --compile ./bin/vtt-transcript.js --outfile dist/vtt-transcript",
+    "build": "bun scripts/build.js",
     "test": "node --test \"tests/**/*.test.js\""
   },
   "engines": {

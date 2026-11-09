@@ -4,6 +4,8 @@
 
 Work on `develop` in the primary checkout, or on task branches in linked worktrees. Start every new worktree task branch from the current `develop` commit, including work delegated to subagents. Merge completed worktree changes back into `develop`. Publish changes through a pull request from `develop` to `main`.
 
+Before opening the `develop` → `main` pull request, bump `version` in `package.json` on `develop`. Merging into `main` publishes a release of that version, and the pull request's check fails if `v<version>` is already tagged (ADR-0012).
+
 ## Agent skills
 
 ### Issue tracker
