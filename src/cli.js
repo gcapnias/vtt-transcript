@@ -6,12 +6,14 @@ import { fetchTranscript } from './fetch.js';
 import { describeRetry } from './fetch-outcome.js';
 import { parseTarget, TargetParseError } from './target.js';
 import { MeetingFileNotFoundError, transcribeMeeting, UnusableMeetingNameError } from './transcribe.js';
+import { VERSION } from './version.js';
 import { preflight, expandPlaylist, ExpansionError, FetchError, YtDlpMissingError } from './ytdlp.js';
 
 const USAGE = `Usage: vtt-transcript <url|id|file.vtt> [--lang <code>]
                       [--layout auto|prose|dialog|meeting] [--playlist]
                       [--force]
        vtt-transcript catalog
+       vtt-transcript --version
 
   <url|id>      a YouTube video URL, a bare video id, a youtu.be or /shorts
                 link, a playlist URL, a channel URL, or a bare @handle; or
@@ -40,7 +42,18 @@ const USAGE = `Usage: vtt-transcript <url|id|file.vtt> [--lang <code>]
                 single video is re-fetched either way.
 
   catalog       rebuild transcripts/README.md from what is on disk, fetching
-                nothing. Takes no target and no flags.`;
+                nothing. Takes no target and no flags.
+
+  --version     print the version and exit, anywhere in the arguments.
+                Needs no target and no yt-dlp.`;
+
+/**
+ * `--version` is answered before anything else, the subcommand included, and
+ * wherever it appears: asking which build this is must work on any command
+ * line and on a machine with no `yt-dlp`. Like `catalog`, it is matched ahead
+ * of the flag parser, which keeps the fetch command's argument shape as it was.
+ */
+const VERSION_FLAG = '--version';
 
 /**
  * `catalog` is a subcommand, not a flag and not a second executable: it takes
@@ -120,6 +133,11 @@ export async function main(argv, io = {}, deps = {}) {
   const expand = deps.expandPlaylist ?? expandPlaylist;
   const readUrls = deps.readExistingUrls ?? readExistingUrls;
   const transcribe = deps.transcribeMeeting ?? transcribeMeeting;
+
+  if (argv.includes(VERSION_FLAG)) {
+    out(VERSION);
+    return 0;
+  }
 
   if (argv[0] === CATALOG_COMMAND) {
     if (argv.length > 1) {

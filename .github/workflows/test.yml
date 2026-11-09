@@ -1,0 +1,52 @@
+# The pull request check (ADR-0012): the tests on every pull request into
+# develop or main, and, into main only, a guard that the version is not
+# already released. Releases do not re-run the tests; what reaches main has
+# passed here.
+name: Test
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: npm test (Node ${{ matrix.node }})
+    # Windows: the only platform the standalone executable is built for, and
+    # the one the suite is run on locally.
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Both lines `engines` allows: >=22.18.0 <23 || >=24.2.0.
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+
+  version-not-released:
+    name: version not yet released
+    if: github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Asks the remote rather than the checkout: a shallow checkout fetches no
+      # tags, and a local lookup would always answer "not tagged".
+      - name: Fail if v<package.json version> is already tagged
+        run: |
+          version=$(node -p "require('./package.json').version")
+          status=0
+          git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null || status=$?
+          if [ "$status" -eq 0 ]; then
+            echo "::error file=package.json::v$version is already released. Bump \"version\" in package.json on develop before merging into main."
+            exit 1
+          elif [ "$status" -ne 2 ]; then
+            echo "::error::Could not ask the remote for tag v$version (git ls-remote exited $status)."
+            exit 1
+          fi
+          echo "v$version is not tagged yet."

@@ -1,0 +1,35 @@
+# Release notes for the GitHub release (ADR-0012), rendered by git-cliff from
+# the conventional commits since the previous v* tag. Features, fixes and
+# refactoring are listed; merges, docs, chores and tests are not. Nothing is
+# written to a changelog file in the repository.
+# https://git-cliff.org/docs/configuration
+
+[changelog]
+header = ""
+# The `<!-- N -->` prefixes order the groups and are stripped from the heading.
+body = """
+{% for group, commits in commits | group_by(attribute="group") %}\
+### {{ group | striptags | trim | upper_first }}
+{% for commit in commits %}\
+- {% if commit.scope %}**{{ commit.scope }}:** {% endif %}{% if commit.breaking %}**Breaking:** {% endif %}{{ commit.message | upper_first }}
+{% endfor %}
+{% endfor %}"""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+filter_commits = true
+tag_pattern = "v[0-9].*"
+sort_commits = "oldest"
+commit_parsers = [
+  # A merge is skipped whatever its subject: some carry a feat: or fix: line.
+  { field = "merge_commit", pattern = "true", skip = true },
+  { message = "^Merge", skip = true },
+  { message = "^feat", group = "<!-- 0 -->Features" },
+  { message = "^fix", group = "<!-- 1 -->Fixes" },
+  { message = "^refactor", group = "<!-- 2 -->Refactoring" },
+  { message = "^docs", skip = true },
+  { message = "^chore", skip = true },
+  { message = "^test", skip = true },
+]

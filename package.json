@@ -1,6 +1,6 @@
 {
   "name": "vtt-transcript",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Turns the subtitles of YouTube and X videos, and Microsoft Teams meeting exports, into Markdown transcripts that read as prose, as dialog or as a meeting, for use as agent input or reference material. It produces transcripts, never summaries.",
   "type": "module",
   "private": true,
@@ -8,7 +8,7 @@
     "vtt-transcript": "./bin/vtt-transcript.js"
   },
   "scripts": {
-    "build": "bun build --compile ./bin/vtt-transcript.js --outfile dist/vtt-transcript",
+    "build": "bun scripts/build.js",
     "test": "node --test \"tests/**/*.test.js\""
   },
   "engines": {
