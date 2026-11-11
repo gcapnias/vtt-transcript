@@ -143,16 +143,26 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
+# Current Repository
+transcripts/**
+
+# Keep .gitkeep files in the repository
+!**/.gitkeep
+
+
 # Agents folder
+.agents/agents/**
 .agents/skills/**
 .agents/worktrees/**
 
 # Claude Code
+.claude/agents/**
 .claude/skills/**
 .claude/worktrees/**
 .claude/settings.local.json
 
 # Codex
+.codex/agents/**
 .codex/config.toml
 
 # Firecrawl, Playwright CLI, Scratch and Worktrees directories
@@ -161,8 +171,9 @@ dist
 .scratch/**
 .worktrees/**
 
-.beads/**
-transcripts/**
-
-# Keep .gitkeep files in the repository
-!**/.gitkeep
+# Conda environment files
+*.conda/**
+# Conda environment YAML files
+# environment.yml
+# br doctor per-run artifacts
+.doctor/
